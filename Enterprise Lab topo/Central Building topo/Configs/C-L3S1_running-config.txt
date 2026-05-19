@@ -1,0 +1,265 @@
+!
+version 12.2(37)SE1
+no service timestamps log datetime msec
+no service timestamps debug datetime msec
+no service password-encryption
+!
+hostname C-L3S1
+!
+!
+no profinet
+enable secret 5 $1$mERr$hx5rVt7rPNoS4wqbXKX7m0
+!
+!
+!
+!
+!
+ip routing
+!
+!
+!
+!
+username cisco secret 5 $1$mERr$hx5rVt7rPNoS4wqbXKX7m0
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+ip ssh version 2
+ip domain-name cisco
+!
+!
+spanning-tree mode pvst
+spanning-tree vlan 10,20 priority 4096
+spanning-tree vlan 30,40 priority 8192
+!
+!
+!
+!
+!
+!
+interface Port-channel1
+ switchport trunk native vlan 98
+ switchport trunk allowed vlan 10,20,30,40
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface FastEthernet0/1
+ switchport trunk native vlan 98
+ switchport trunk allowed vlan 10,20,30,40
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface FastEthernet0/2
+ switchport trunk native vlan 98
+ switchport trunk allowed vlan 10,20,30,40
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface FastEthernet0/3
+ switchport trunk native vlan 98
+ switchport trunk allowed vlan 10,20,30,40
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface FastEthernet0/4
+ switchport trunk native vlan 98
+ switchport trunk allowed vlan 10,20,30,40
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface FastEthernet0/5
+ switchport access vlan 40
+ switchport trunk native vlan 98
+ switchport port-security mac-address sticky 
+!
+interface FastEthernet0/6
+ switchport access vlan 99
+ switchport trunk native vlan 98
+ shutdown
+!
+interface FastEthernet0/7
+ switchport access vlan 99
+ switchport trunk native vlan 98
+ shutdown
+!
+interface FastEthernet0/8
+ switchport access vlan 99
+ switchport trunk native vlan 98
+ shutdown
+!
+interface FastEthernet0/9
+ switchport access vlan 99
+ switchport trunk native vlan 98
+ shutdown
+!
+interface FastEthernet0/10
+ switchport trunk native vlan 98
+ switchport trunk allowed vlan 10,20,30,40
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ channel-group 1 mode on
+!
+interface FastEthernet0/11
+ switchport trunk native vlan 98
+ switchport trunk allowed vlan 10,20,30,40
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ channel-group 1 mode on
+!
+interface FastEthernet0/12
+ switchport trunk native vlan 98
+ switchport trunk allowed vlan 10,20,30,40
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ channel-group 1 mode on
+!
+interface FastEthernet0/13
+ switchport access vlan 99
+ switchport trunk native vlan 98
+ shutdown
+!
+interface FastEthernet0/14
+ switchport access vlan 99
+ switchport trunk native vlan 98
+ shutdown
+!
+interface FastEthernet0/15
+ switchport access vlan 99
+ switchport trunk native vlan 98
+ shutdown
+!
+interface FastEthernet0/16
+ switchport access vlan 99
+ switchport trunk native vlan 98
+ shutdown
+!
+interface FastEthernet0/17
+ switchport access vlan 99
+ switchport trunk native vlan 98
+ shutdown
+!
+interface FastEthernet0/18
+ switchport access vlan 99
+ switchport trunk native vlan 98
+ shutdown
+!
+interface FastEthernet0/19
+ switchport access vlan 99
+ switchport trunk native vlan 98
+ shutdown
+!
+interface FastEthernet0/20
+ switchport access vlan 99
+ switchport trunk native vlan 98
+ shutdown
+!
+interface FastEthernet0/21
+ switchport access vlan 99
+ switchport trunk native vlan 98
+ shutdown
+!
+interface FastEthernet0/22
+ switchport access vlan 99
+ switchport trunk native vlan 98
+ shutdown
+!
+interface FastEthernet0/23
+ switchport access vlan 99
+ switchport trunk native vlan 98
+ shutdown
+!
+interface FastEthernet0/24
+ switchport access vlan 99
+ switchport trunk native vlan 98
+ shutdown
+!
+interface GigabitEthernet0/1
+ switchport access vlan 99
+ shutdown
+!
+interface GigabitEthernet0/2
+ switchport access vlan 99
+ shutdown
+!
+interface Vlan1
+ no ip address
+ shutdown
+!
+interface Vlan10
+ description MARKETING
+ mac-address 0007.ec75.9301
+ ip address 10.1.111.1 255.255.255.0
+ ip helper-address 10.1.141.5
+!
+interface Vlan20
+ description SALES
+ mac-address 0007.ec75.9302
+ ip address 10.1.121.1 255.255.255.0
+ ip helper-address 10.1.141.5
+!
+interface Vlan30
+ description IT
+ mac-address 0007.ec75.9303
+ ip address 10.1.131.1 255.255.255.0
+ ip helper-address 10.1.141.5
+!
+interface Vlan40
+ mac-address 0007.ec75.9304
+ ip address 10.1.141.1 255.255.255.0
+!
+ip classless
+!
+ip flow-export version 9
+!
+!
+ip access-list extended Protect_Server_IN
+ permit udp any host 255.255.255.255 eq bootps
+ permit udp any any eq bootpc
+ permit udp any host 10.1.141.5 eq bootps
+ permit ip 10.1.141.0 0.0.0.255 host 10.1.141.5
+ deny ip any host 10.1.141.5
+ permit ip any any
+ip access-list extended Protect_Server_OUT
+ permit udp host 10.1.141.5 any eq bootpc
+ permit ip host 10.1.141.5 10.1.141.0 0.0.0.255
+ deny ip host 10.1.141.5 10.1.111.0 0.0.0.255
+ deny ip host 10.1.141.5 10.1.121.0 0.0.0.255
+ deny ip host 10.1.141.5 10.1.131.0 0.0.0.255
+ deny ip host 10.1.141.5 10.1.141.0 0.0.0.255
+ permit ip any any
+ip access-list extended ManagementSSH_IN
+ permit tcp 10.1.141.0 0.0.0.255 any eq 22
+ deny tcp any any eq 22
+ permit ip any any
+!
+banner motd #Unauthorized access is prohibited!#
+!
+!
+!
+!
+!
+line con 0
+ login local
+!
+line aux 0
+!
+line vty 0 4
+ access-class ManagementSSH_IN in
+ login local
+ transport input ssh
+line vty 5 15
+ access-class ManagementSSH_IN in
+ login local
+ transport input ssh
+!
+!
+!
+!
+end
+

@@ -1,0 +1,234 @@
+!
+version 12.2(37)SE1
+no service timestamps log datetime msec
+no service timestamps debug datetime msec
+no service password-encryption
+!
+hostname C-L3S2
+!
+!
+no profinet
+enable secret 5 $1$mERr$hx5rVt7rPNoS4wqbXKX7m0
+!
+!
+!
+!
+!
+ip routing
+!
+!
+!
+!
+username cisco secret 5 $1$mERr$hx5rVt7rPNoS4wqbXKX7m0
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+ip ssh version 2
+ip domain-name cisco
+!
+!
+spanning-tree mode pvst
+spanning-tree vlan 30,40 priority 4096
+spanning-tree vlan 10,20 priority 8192
+!
+!
+!
+!
+!
+!
+interface Port-channel1
+ switchport trunk native vlan 98
+ switchport trunk allowed vlan 10,20,30,40
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface FastEthernet0/1
+ switchport trunk native vlan 98
+ switchport trunk allowed vlan 10,20,30,40
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface FastEthernet0/2
+ switchport trunk native vlan 98
+ switchport trunk allowed vlan 10,20,30,40
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface FastEthernet0/3
+ switchport trunk native vlan 98
+ switchport trunk allowed vlan 10,20,30,40
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface FastEthernet0/4
+ switchport trunk native vlan 98
+ switchport trunk allowed vlan 10,20,30,40
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface FastEthernet0/5
+ switchport trunk native vlan 98
+!
+interface FastEthernet0/6
+ switchport trunk native vlan 98
+!
+interface FastEthernet0/7
+ switchport trunk native vlan 98
+!
+interface FastEthernet0/8
+ switchport trunk native vlan 98
+!
+interface FastEthernet0/9
+ switchport trunk native vlan 98
+!
+interface FastEthernet0/10
+ switchport trunk native vlan 98
+ switchport trunk allowed vlan 10,20,30,40
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ channel-group 1 mode on
+!
+interface FastEthernet0/11
+ switchport trunk native vlan 98
+ switchport trunk allowed vlan 10,20,30,40
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ channel-group 1 mode on
+!
+interface FastEthernet0/12
+ switchport trunk native vlan 98
+ switchport trunk allowed vlan 10,20,30,40
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ channel-group 1 mode on
+!
+interface FastEthernet0/13
+ switchport trunk native vlan 98
+!
+interface FastEthernet0/14
+ switchport trunk native vlan 98
+!
+interface FastEthernet0/15
+ switchport trunk native vlan 98
+!
+interface FastEthernet0/16
+ switchport trunk native vlan 98
+!
+interface FastEthernet0/17
+ switchport trunk native vlan 98
+!
+interface FastEthernet0/18
+ switchport trunk native vlan 98
+!
+interface FastEthernet0/19
+ switchport trunk native vlan 98
+!
+interface FastEthernet0/20
+ switchport trunk native vlan 98
+!
+interface FastEthernet0/21
+ switchport trunk native vlan 98
+!
+interface FastEthernet0/22
+ switchport trunk native vlan 98
+!
+interface FastEthernet0/23
+ switchport trunk native vlan 98
+!
+interface FastEthernet0/24
+ switchport trunk native vlan 98
+!
+interface GigabitEthernet0/1
+ switchport trunk native vlan 98
+!
+interface GigabitEthernet0/2
+ switchport trunk native vlan 98
+!
+interface Vlan1
+ no ip address
+ shutdown
+!
+interface Vlan10
+ description MARKETING
+ mac-address 0001.6428.3b01
+ ip address 10.1.111.2 255.255.255.0
+ ip helper-address 10.1.141.5
+!
+interface Vlan20
+ description SALES
+ mac-address 0001.6428.3b02
+ ip address 10.1.121.2 255.255.255.0
+ ip helper-address 10.1.141.5
+!
+interface Vlan30
+ description IT
+ mac-address 0001.6428.3b03
+ ip address 10.1.131.2 255.255.255.0
+ ip helper-address 10.1.141.5
+!
+interface Vlan40
+ description MANAGEMENT
+ mac-address 0001.6428.3b04
+ ip address 10.1.141.2 255.255.255.0
+!
+ip classless
+!
+ip flow-export version 9
+!
+!
+ip access-list extended Managment_IN
+ permit ip 10.1.141.0 0.0.0.255 host 10.1.111.1
+ permit ip 10.1.141.0 0.0.0.255 host 10.1.111.2
+ permit ip 10.1.141.0 0.0.0.255 host 10.1.121.1
+ permit ip 10.1.141.0 0.0.0.255 host 10.1.121.2
+ permit ip 10.1.141.0 0.0.0.255 host 10.1.131.1
+ permit ip 10.1.141.0 0.0.0.255 host 10.1.131.2
+ permit ip 10.1.141.0 0.0.0.255 host 10.1.141.1
+ permit ip 10.1.141.0 0.0.0.255 host 10.1.141.2
+ deny ip any host 10.1.111.1
+ deny ip any host 10.1.111.2
+ deny ip any host 10.1.121.2
+ deny ip any host 10.1.121.1
+ deny ip any host 10.1.131.1
+ deny ip any host 10.1.131.2
+ deny ip any host 10.1.141.2
+ deny ip any host 10.1.141.1
+ permit ip any any
+ip access-list extended ManagementSSH_IN
+ permit tcp 10.1.141.0 0.0.0.255 any eq 22
+ deny tcp any any eq 22
+ permit ip any any
+!
+banner login cUnauthorized ac
+banner motd #Unauthorized access is prohibited!#
+!
+!
+!
+!
+!
+line con 0
+ login local
+!
+line aux 0
+!
+line vty 0 4
+ access-class ManagementSSH_IN in
+ login local
+ transport input ssh
+line vty 5 15
+ access-class ManagementSSH_IN in
+ login local
+ transport input ssh
+!
+!
+!
+!
+end
+
